@@ -5,6 +5,7 @@ class Gameboard {
     this.ships = [];
     this.hits = [];
     this.missedShots = [];
+    this.allShots = [];
   }
 
   placeShip(x, y, shipLength, direction) {
@@ -41,6 +42,7 @@ class Gameboard {
       });
     });
     if (missed) this.missedShots.push({ x: x, y: y });
+    this.allShots.push({ x: x, y: y });
   }
 
   reportAllSunk() {

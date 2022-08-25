@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10vmin;
   pointer-events: none;
 }
 
@@ -15,12 +15,22 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-body {
+  background-color: #282c34;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
@@ -35,4 +45,24 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Grid {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  grid-template-rows: repeat(32, 1fr);
+  border: solid;
+  border-color: #61dafb;
+}
+
+.gridsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8rem;
+}
+
+.gridField {
+  width: 1em;
+  height: 1em;
+  border: solid 0.5px #61dafb;
 }

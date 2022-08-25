@@ -40,3 +40,14 @@ test("sink all ships and report that all ships have been sunk", () => {
   gameboard.receiveAttack(5, 8);
   expect(gameboard.reportAllSunk()).toBeTruthy();
 });
+
+test("track all shots that have been made", () => {
+  const gameboard = new Gameboard();
+  gameboard.placeShip(1, 2, 3, "vertical");
+  gameboard.receiveAttack(1, 3);
+  gameboard.receiveAttack(5, 8);
+  expect(gameboard.allShots).toEqual([
+    { x: 1, y: 3 },
+    { x: 5, y: 8 },
+  ]);
+});
