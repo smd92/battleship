@@ -10,7 +10,6 @@ const Grid = (props) => {
 
   const buildGridNodes = () => {
     const nodes = [];
-
     for (let i = props.grid; i > 0; i--) {
       for (let j = 0; j < props.grid; j++) {
         nodes.push(
@@ -27,8 +26,21 @@ const Grid = (props) => {
     setGridNodes(nodes);
   };
 
+  const markShips = () => {
+    gridNodes.forEach((node) => {
+      const x = node.getAttribute("x");
+      const y = node.getAttribute("y");
+      props.gameboard.ships.forEach((ship) => {
+        ship.coordinates.forEach((set) => {
+          if (set.x == x && set.y === y) node.className = "gridField ship";
+        });
+      });
+    });
+  };
+
   React.useEffect(() => {
     buildGridNodes();
+    markShips();
   }, []);
 
   return (
@@ -47,11 +59,18 @@ function App() {
   const [player1, setPlayer1] = React.useState(null);
   const [player2, setPlayer2] = React.useState(null);
 
+  const fillBoards = () => {
+    const board1 = new Gameboard();
+    const board2 = new Gameboard();
+    board1.placeShip(5, 17, 3, "vertical");
+    board2.placeShip(9, 23, 3, "horizontal");
+    setPlayer1Board(board1);
+    setPlayer2Board(board2);
+  };
+
   const startGame = () => {
-    setIsGame(true);
     setGrid(32);
-    setPlayer1Board(new Gameboard());
-    setPlayer2Board(new Gameboard());
+    fillBoards();
     setPlayer1(new Player("Human", player1Board));
     setPlayer2(
       new BotPlayer("Bot", player2Board, {
@@ -61,6 +80,7 @@ function App() {
         yMax: grid,
       })
     );
+    setIsGame(true);
   };
 
   return (
@@ -78,8 +98,16 @@ function App() {
           </button>
         ) : (
           <div className="gridsContainer">
-            <Grid playerName={player1.playerName} grid={grid} />
-            <Grid playerName={player2.playerName} grid={grid} />
+            <Grid
+              playerName={player1.playerName}
+              grid={grid}
+              board={player1Board}
+            />
+            <Grid
+              playerName={player2.playerName}
+              grid={grid}
+              board={player2Board}
+            />
           </div>
         )}
       </main>
