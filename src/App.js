@@ -12,13 +12,22 @@ const Grid = (props) => {
     const nodes = [];
     for (let i = props.grid; i > 0; i--) {
       for (let j = 0; j < props.grid; j++) {
+        const coords = `(${j + 1}, ${i})`;
+        const xVal = j + 1;
+        const yVal = i;
+        let className = "gridField";
+        props.board.ships.forEach((ship) => {
+          ship.coordinates.forEach((set) => {
+            if (set.x == xVal && set.y === yVal) className = "gridField ship";
+          });
+        });
         nodes.push(
           <div
-            key={`(${j + 1}, ${i})`}
-            id={`(${j + 1}, ${i})`}
-            className="gridField"
-            x={j + 1}
-            y={i}
+            key={coords}
+            id={coords}
+            className={className}
+            x={xVal}
+            y={yVal}
           ></div>
         );
       }
@@ -26,21 +35,8 @@ const Grid = (props) => {
     setGridNodes(nodes);
   };
 
-  const markShips = () => {
-    gridNodes.forEach((node) => {
-      const x = node.getAttribute("x");
-      const y = node.getAttribute("y");
-      props.gameboard.ships.forEach((ship) => {
-        ship.coordinates.forEach((set) => {
-          if (set.x == x && set.y === y) node.className = "gridField ship";
-        });
-      });
-    });
-  };
-
   React.useEffect(() => {
     buildGridNodes();
-    markShips();
   }, []);
 
   return (

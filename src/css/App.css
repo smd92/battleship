@@ -66,3 +66,8 @@
   height: 1em;
   border: solid 0.5px #61dafb;
 }
+
+.ship {
+  background-color: rgb(66, 204, 119);
+  border: none;
+}
