@@ -20,6 +20,7 @@ class BotPlayer {
     const y = Math.floor(
       Math.random() * (this.range.yMax - this.range.yMin) + this.range.yMin
     );
+    console.log({x, y})
     return { x, y };
   }
 
@@ -31,11 +32,14 @@ class BotPlayer {
       attackCoords.x,
       attackCoords.y
     );
+    enemyGameboard.receiveAttack(attackCoords.x, attackCoords.y);
+    console.log(this.range)
+    /*
     if (!checkResult) {
       enemyGameboard.receiveAttack(attackCoords.x, attackCoords.y);
     } else {
       this.attackEnemyGameboard(enemyGameboard);
-    }
+    }*/
   }
 }
 

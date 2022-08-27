@@ -71,3 +71,11 @@
   background-color: rgb(66, 204, 119);
   border: none;
 }
+
+ .gridField.hit {
+  background-color: #61dafb;
+}
+
+.gridField.ship.hit {
+  background-color: red;
+}

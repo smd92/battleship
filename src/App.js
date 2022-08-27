@@ -8,6 +8,27 @@ import BotPlayer from "./js/BotPlayer";
 const Grid = (props) => {
   const [gridNodes, setGridNodes] = React.useState(null);
 
+  const getClassName = (x, y) => {
+    let className = "gridField";
+    //set className for fields that are ships
+    props.board.ships.forEach((ship) => {
+      ship.coordinates.forEach((set) => {
+        if (set.x == x && set.y === y) className = className + " ship";
+      });
+    });
+    //set className for fields that have been shot already
+    props.board.allShots.forEach((set) => {
+      if (set.x == x && set.y == y) className = className + " hit";
+    });
+    return className;
+  };
+
+  const handleClick = (event) => {
+    const x = event.target.getAttribute("x");
+    const y = event.target.getAttribute("y");
+    props.attackBoard(x, y);
+  };
+
   const buildGridNodes = () => {
     const nodes = [];
     for (let i = props.grid; i > 0; i--) {
@@ -15,12 +36,7 @@ const Grid = (props) => {
         const coords = `(${j + 1}, ${i})`;
         const xVal = j + 1;
         const yVal = i;
-        let className = "gridField";
-        props.board.ships.forEach((ship) => {
-          ship.coordinates.forEach((set) => {
-            if (set.x == xVal && set.y === yVal) className = "gridField ship";
-          });
-        });
+        const className = getClassName(xVal, yVal);
         nodes.push(
           <div
             key={coords}
@@ -28,6 +44,8 @@ const Grid = (props) => {
             className={className}
             x={xVal}
             y={yVal}
+            player-id={props.playerId}
+            onClick={(event) => handleClick(event)}
           ></div>
         );
       }
@@ -37,14 +55,14 @@ const Grid = (props) => {
 
   React.useEffect(() => {
     buildGridNodes();
-  }, []);
+  }, [props.turn]);
 
   return (
     <div>
-      <h2>{props.playerName}</h2>
+      <h2>{props.player.playerName}</h2>
       <div className="Grid">{gridNodes}</div>
     </div>
-  );
+  ); 
 };
 
 function App() {
@@ -54,6 +72,17 @@ function App() {
   const [player2Board, setPlayer2Board] = React.useState(null);
   const [player1, setPlayer1] = React.useState(null);
   const [player2, setPlayer2] = React.useState(null);
+  const [turn, setTurn] = React.useState(true);
+
+  const attackHumanBoard = () => {
+    player2.attackEnemyGameboard(player1Board);
+  };
+
+  const attackBotBoard = (x, y) => {
+    player2Board.receiveAttack(x, y);
+    setTurn(!turn)
+    attackHumanBoard();
+  };
 
   const fillBoards = () => {
     const board1 = new Gameboard();
@@ -71,9 +100,9 @@ function App() {
     setPlayer2(
       new BotPlayer("Bot", player2Board, {
         xMin: 1,
-        xMax: grid,
+        xMax: 32,
         yMin: 1,
-        yMax: grid,
+        yMax: 32,
       })
     );
     setIsGame(true);
@@ -94,15 +123,28 @@ function App() {
           </button>
         ) : (
           <div className="gridsContainer">
+            {turn ? (
+              <p>{`It's ${player1.playerName}'s turn`}</p>
+            ) : (
+              <p>{`It's ${player2.playerName}'s turn`}</p>
+            )}
             <Grid
-              playerName={player1.playerName}
               grid={grid}
               board={player1Board}
+              turn={turn}
+              player={player1}
+              playerId={1}
+              setTurn={setTurn}
+              attackBoard={attackBotBoard}
             />
             <Grid
-              playerName={player2.playerName}
               grid={grid}
               board={player2Board}
+              turn={turn}
+              player={player2}
+              playerId={2}
+              setTurn={setTurn}
+              attackBoard={attackBotBoard}
             />
           </div>
         )}
