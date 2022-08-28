@@ -24,9 +24,11 @@ const Grid = (props) => {
   };
 
   const handleClick = (event) => {
-    const x = event.target.getAttribute("x");
-    const y = event.target.getAttribute("y");
-    props.attackBoard(x, y);
+    if (event.target.getAttribute("player-id") === "2") {
+      const x = event.target.getAttribute("x");
+      const y = event.target.getAttribute("y");
+      props.attackBoard(x, y);
+    }
   };
 
   const buildGridNodes = () => {
@@ -62,7 +64,7 @@ const Grid = (props) => {
       <h2>{props.player.playerName}</h2>
       <div className="Grid">{gridNodes}</div>
     </div>
-  ); 
+  );
 };
 
 function App() {
@@ -72,15 +74,16 @@ function App() {
   const [player2Board, setPlayer2Board] = React.useState(null);
   const [player1, setPlayer1] = React.useState(null);
   const [player2, setPlayer2] = React.useState(null);
-  const [turn, setTurn] = React.useState(true);
+  const [turn, setTurn] = React.useState({ p: "human", count: 0 });
 
   const attackHumanBoard = () => {
     player2.attackEnemyGameboard(player1Board);
+    setTurn({ p: "human", count: turn.count++ });
   };
 
   const attackBotBoard = (x, y) => {
     player2Board.receiveAttack(x, y);
-    setTurn(!turn)
+    setTurn({ p: "bot", count: turn.count++ });
     attackHumanBoard();
   };
 
@@ -121,13 +124,12 @@ function App() {
           <button type="button" onClick={startGame}>
             Start Game
           </button>
+        ) : player1Board.reportAllSunk() || player2Board.reportAllSunk() ? (
+          <button type="button" onClick={() => setIsGame(false)}>
+            Restart
+          </button>
         ) : (
           <div className="gridsContainer">
-            {turn ? (
-              <p>{`It's ${player1.playerName}'s turn`}</p>
-            ) : (
-              <p>{`It's ${player2.playerName}'s turn`}</p>
-            )}
             <Grid
               grid={grid}
               board={player1Board}

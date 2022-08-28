@@ -8,7 +8,7 @@ class BotPlayer {
   //check if coordinates have been shot already
   checkCoords(allShots, x, y) {
     return allShots.some((set) => {
-      return set.x === x && set.y === y;
+      return set.x == x && set.y == y;
     });
   }
 
@@ -20,7 +20,6 @@ class BotPlayer {
     const y = Math.floor(
       Math.random() * (this.range.yMax - this.range.yMin) + this.range.yMin
     );
-    console.log({x, y})
     return { x, y };
   }
 
@@ -33,13 +32,11 @@ class BotPlayer {
       attackCoords.y
     );
     enemyGameboard.receiveAttack(attackCoords.x, attackCoords.y);
-    console.log(this.range)
-    /*
     if (!checkResult) {
       enemyGameboard.receiveAttack(attackCoords.x, attackCoords.y);
     } else {
       this.attackEnemyGameboard(enemyGameboard);
-    }*/
+    }
   }
 }
 

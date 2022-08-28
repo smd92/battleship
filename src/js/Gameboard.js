@@ -33,7 +33,7 @@ class Gameboard {
     let missed = true;
     this.ships.forEach((ship) => {
       ship.coordinates.forEach((set) => {
-        if (set.x === x && set.y === y) {
+        if (set.x == x && set.y == y) {
           this.hits.push(set);
           const num = ship.coordinates.indexOf(set);
           ship.ship.hit(num + 1);
